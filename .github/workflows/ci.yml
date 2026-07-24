@@ -24,6 +24,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
+    env:
+      NODE_ENV: test
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/afos_ci?schema=public
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
