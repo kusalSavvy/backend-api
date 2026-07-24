@@ -1,7 +1,4 @@
-import {
-  ConflictException,
-  NotFoundException,
-} from '@nestjs/common';
+import { ConflictException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PinoLogger } from 'nestjs-pino';
 
@@ -31,24 +28,21 @@ describe('AccountTypesService', () => {
   beforeEach(async () => {
     jest.resetAllMocks();
 
-    const module: TestingModule =
-      await Test.createTestingModule({
-        providers: [
-          AccountTypesService,
-          {
-            provide: PrismaService,
-            useValue: prismaMock,
-          },
-          {
-            provide: PinoLogger,
-            useValue: loggerMock,
-          },
-        ],
-      }).compile();
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        AccountTypesService,
+        {
+          provide: PrismaService,
+          useValue: prismaMock,
+        },
+        {
+          provide: PinoLogger,
+          useValue: loggerMock,
+        },
+      ],
+    }).compile();
 
-    service = module.get<AccountTypesService>(
-      AccountTypesService,
-    );
+    service = module.get<AccountTypesService>(AccountTypesService);
   });
 
   describe('service creation', () => {
@@ -78,13 +72,9 @@ describe('AccountTypesService', () => {
 
       const result = await service.create(dto);
 
-      expect(
-        prismaMock.accountType.create,
-      ).toHaveBeenCalledTimes(1);
+      expect(prismaMock.accountType.create).toHaveBeenCalledTimes(1);
 
-      expect(
-        prismaMock.accountType.create,
-      ).toHaveBeenCalledWith({
+      expect(prismaMock.accountType.create).toHaveBeenCalledWith({
         data: {
           name: dto.name,
           description: dto.description,
@@ -112,9 +102,7 @@ describe('AccountTypesService', () => {
 
       const result = await service.create(dto);
 
-      expect(result.id).toBe(
-        '9223372036854775807',
-      );
+      expect(result.id).toBe('9223372036854775807');
     });
 
     it('should throw ConflictException when the name already exists', async () => {
@@ -123,42 +111,32 @@ describe('AccountTypesService', () => {
         description: 'Individual customer account',
       };
 
-      const prismaError =
-        new Prisma.PrismaClientKnownRequestError(
-          'Unique constraint failed',
-          {
-            code: 'P2002',
-            clientVersion: 'test',
-            meta: {
-              modelName: 'AccountType',
-              target: ['name'],
-            },
+      const prismaError = new Prisma.PrismaClientKnownRequestError(
+        'Unique constraint failed',
+        {
+          code: 'P2002',
+          clientVersion: 'test',
+          meta: {
+            modelName: 'AccountType',
+            target: ['name'],
           },
-        );
-
-      prismaMock.accountType.create.mockRejectedValue(
-        prismaError,
+        },
       );
+
+      prismaMock.accountType.create.mockRejectedValue(prismaError);
 
       const action = service.create(dto);
 
-      await expect(action).rejects.toBeInstanceOf(
-        ConflictException,
-      );
+      await expect(action).rejects.toBeInstanceOf(ConflictException);
 
       await expect(action).rejects.toMatchObject({
         status: 409,
-        message:
-          "Account type 'Person Account' already exists",
+        message: "Account type 'Person Account' already exists",
       });
 
-      expect(
-        prismaMock.accountType.create,
-      ).toHaveBeenCalledTimes(1);
+      expect(prismaMock.accountType.create).toHaveBeenCalledTimes(1);
 
-      expect(
-        prismaMock.accountType.create,
-      ).toHaveBeenCalledWith({
+      expect(prismaMock.accountType.create).toHaveBeenCalledWith({
         data: dto,
       });
     });
@@ -169,17 +147,11 @@ describe('AccountTypesService', () => {
         description: 'Broker partner account',
       };
 
-      const databaseError = new Error(
-        'Database connection failed',
-      );
+      const databaseError = new Error('Database connection failed');
 
-      prismaMock.accountType.create.mockRejectedValue(
-        databaseError,
-      );
+      prismaMock.accountType.create.mockRejectedValue(databaseError);
 
-      await expect(
-        service.create(dto),
-      ).rejects.toThrow(
+      await expect(service.create(dto)).rejects.toThrow(
         'Database connection failed',
       );
 
@@ -204,13 +176,9 @@ describe('AccountTypesService', () => {
 
       const result = await service.findAll();
 
-      expect(
-        prismaMock.accountType.findMany,
-      ).toHaveBeenCalledTimes(1);
+      expect(prismaMock.accountType.findMany).toHaveBeenCalledTimes(1);
 
-      expect(
-        prismaMock.accountType.findMany,
-      ).toHaveBeenCalledWith({
+      expect(prismaMock.accountType.findMany).toHaveBeenCalledWith({
         orderBy: {
           name: 'asc',
         },
@@ -231,17 +199,13 @@ describe('AccountTypesService', () => {
     });
 
     it('should return an empty array when no account types exist', async () => {
-      prismaMock.accountType.findMany.mockResolvedValue(
-        [],
-      );
+      prismaMock.accountType.findMany.mockResolvedValue([]);
 
       const result = await service.findAll();
 
       expect(result).toEqual([]);
 
-      expect(
-        prismaMock.accountType.findMany,
-      ).toHaveBeenCalledTimes(1);
+      expect(prismaMock.accountType.findMany).toHaveBeenCalledTimes(1);
     });
 
     it('should rethrow an unexpected findAll database error', async () => {
@@ -249,9 +213,7 @@ describe('AccountTypesService', () => {
         new Error('Failed to retrieve account types'),
       );
 
-      await expect(
-        service.findAll(),
-      ).rejects.toThrow(
+      await expect(service.findAll()).rejects.toThrow(
         'Failed to retrieve account types',
       );
     });
@@ -267,13 +229,9 @@ describe('AccountTypesService', () => {
 
       const result = await service.findById(1n);
 
-      expect(
-        prismaMock.accountType.findUnique,
-      ).toHaveBeenCalledTimes(1);
+      expect(prismaMock.accountType.findUnique).toHaveBeenCalledTimes(1);
 
-      expect(
-        prismaMock.accountType.findUnique,
-      ).toHaveBeenCalledWith({
+      expect(prismaMock.accountType.findUnique).toHaveBeenCalledWith({
         where: {
           id: 1n,
         },
@@ -287,29 +245,20 @@ describe('AccountTypesService', () => {
     });
 
     it('should throw NotFoundException when the account type does not exist', async () => {
-      prismaMock.accountType.findUnique.mockResolvedValue(
-        null,
-      );
+      prismaMock.accountType.findUnique.mockResolvedValue(null);
 
       const action = service.findById(999n);
 
-      await expect(action).rejects.toBeInstanceOf(
-        NotFoundException,
-      );
+      await expect(action).rejects.toBeInstanceOf(NotFoundException);
 
       await expect(action).rejects.toMatchObject({
         status: 404,
-        message:
-          "Account type with ID '999' was not found",
+        message: "Account type with ID '999' was not found",
       });
 
-      expect(
-        prismaMock.accountType.findUnique,
-      ).toHaveBeenCalledTimes(1);
+      expect(prismaMock.accountType.findUnique).toHaveBeenCalledTimes(1);
 
-      expect(
-        prismaMock.accountType.findUnique,
-      ).toHaveBeenCalledWith({
+      expect(prismaMock.accountType.findUnique).toHaveBeenCalledWith({
         where: {
           id: 999n,
         },
@@ -321,9 +270,9 @@ describe('AccountTypesService', () => {
         new Error('Database query failed'),
       );
 
-      await expect(
-        service.findById(1n),
-      ).rejects.toThrow('Database query failed');
+      await expect(service.findById(1n)).rejects.toThrow(
+        'Database query failed',
+      );
     });
   });
 });

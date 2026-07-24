@@ -1,10 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiConflictResponse,
@@ -27,10 +21,7 @@ import { CreateAccountTypeDto } from './dto/create-account-type.dto';
   version: '1',
 })
 export class AccountTypesController {
-  constructor(
-    private readonly accountTypesService:
-      AccountTypesService,
-  ) {}
+  constructor(private readonly accountTypesService: AccountTypesService) {}
 
   @Post()
   @ApiOperation({
@@ -45,9 +36,7 @@ export class AccountTypesController {
   @ApiConflictResponse({
     description: 'Account type name already exists',
   })
-  create(
-    @Body() dto: CreateAccountTypeDto,
-  ): Promise<AccountTypeResponseDto> {
+  create(@Body() dto: CreateAccountTypeDto): Promise<AccountTypeResponseDto> {
     return this.accountTypesService.create(dto);
   }
 

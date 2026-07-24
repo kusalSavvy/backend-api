@@ -32,7 +32,7 @@
         "db:seed": "prisma db seed",
         "clean": "rimraf dist coverage",
         "prebuild": "pnpm clean && pnpm prisma:generate",
-        "ci:check": "pnpm format:check && pnpm lint:check && pnpm typecheck && pnpm prisma:validate && pnpm test:unit:cov && pnpm build"
+        "ci:check": "pnpm prisma:validate && pnpm prisma:generate && pnpm format:check && pnpm lint:check && pnpm typecheck && pnpm test:unit:cov && pnpm build"
     },
     "dependencies": {
         "@nestjs/common": "^11.1.28",
