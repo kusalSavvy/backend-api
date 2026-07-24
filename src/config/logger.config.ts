@@ -8,9 +8,7 @@ const VALID_CORRELATION_ID = /^[a-zA-Z0-9._:-]{1,128}$/;
 function resolveCorrelationId(
   headerValue: string | string[] | undefined,
 ): string {
-  const value = Array.isArray(headerValue)
-    ? headerValue[0]
-    : headerValue;
+  const value = Array.isArray(headerValue) ? headerValue[0] : headerValue;
 
   if (value && VALID_CORRELATION_ID.test(value)) {
     return value;
@@ -19,11 +17,8 @@ function resolveCorrelationId(
   return randomUUID();
 }
 
-export function createLoggerConfig(
-  configService: ConfigService,
-): Params {
-  const environment =
-    configService.get<string>('NODE_ENV') ?? 'development';
+export function createLoggerConfig(configService: ConfigService): Params {
+  const environment = configService.get<string>('NODE_ENV') ?? 'development';
 
   const isProduction = environment === 'production';
 
@@ -38,10 +33,7 @@ export function createLoggerConfig(
           request.headers[CORRELATION_ID_HEADER],
         );
 
-        response.setHeader(
-          CORRELATION_ID_HEADER,
-          correlationId,
-        );
+        response.setHeader(CORRELATION_ID_HEADER, correlationId);
 
         return correlationId;
       },

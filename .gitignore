@@ -1,12 +1,28 @@
+# Dependencies
+/node_modules/
+
 # Compiled output
 /dist/
 /build/
 
-# Dependencies
-/node_modules/
+# Test output
+/coverage/
+/.nyc_output/
+test-results/
 
 # Prisma generated client
-/generated/prisma/
+/src/generated/prisma/
+
+# Prisma local database files
+*.db
+*.db-journal
+*.sqlite
+*.sqlite-journal
+
+# Environment variables
+.env
+.env.*
+!.env.example
 
 # Logs
 logs/
@@ -17,20 +33,13 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
-# Test output
-/coverage/
-/.nyc_output/
-
-# Environment variables
-.env
-.env.*
-!.env.example
-
-# Temporary directories
+# Temporary files and directories
 .temp/
 .tmp/
+tmp/
+*.tmp
 
-# Runtime data
+# Runtime files
 pids/
 *.pid
 *.seed
@@ -43,13 +52,10 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 .eslintcache
 *.tsbuildinfo
 .pnpm-store/
+.cache/
+.nest/
 
-# OS files
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# IntelliJ / WebStorm
+# IDE - IntelliJ / WebStorm
 /.idea/
 *.iml
 .project
@@ -65,3 +71,18 @@ desktop.ini
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Docker local overrides
+docker-compose.override.yml
+
+# Local certificates and keys
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx

@@ -25,9 +25,7 @@ export class AccountTypesService {
     this.logger.setContext(AccountTypesService.name);
   }
 
-  async create(
-    dto: CreateAccountTypeDto,
-  ): Promise<AccountTypeResponseDto> {
+  async create(dto: CreateAccountTypeDto): Promise<AccountTypeResponseDto> {
     this.logger.info(
       {
         accountTypeName: dto.name,
@@ -36,13 +34,12 @@ export class AccountTypesService {
     );
 
     try {
-      const accountType =
-        await this.prisma.accountType.create({
-          data: {
-            name: dto.name,
-            description: dto.description,
-          },
-        });
+      const accountType = await this.prisma.accountType.create({
+        data: {
+          name: dto.name,
+          description: dto.description,
+        },
+      });
 
       this.logger.info(
         {
@@ -80,16 +77,13 @@ export class AccountTypesService {
   }
 
   async findAll(): Promise<AccountTypeResponseDto[]> {
-    this.logger.debug(
-      'Retrieving all account types',
-    );
+    this.logger.debug('Retrieving all account types');
 
-    const accountTypes =
-      await this.prisma.accountType.findMany({
-        orderBy: {
-          name: 'asc',
-        },
-      });
+    const accountTypes = await this.prisma.accountType.findMany({
+      orderBy: {
+        name: 'asc',
+      },
+    });
 
     this.logger.debug(
       {
@@ -98,14 +92,10 @@ export class AccountTypesService {
       'Account types retrieved successfully',
     );
 
-    return accountTypes.map((accountType) =>
-      this.toResponse(accountType),
-    );
+    return accountTypes.map((accountType) => this.toResponse(accountType));
   }
 
-  async findById(
-    id: bigint,
-  ): Promise<AccountTypeResponseDto> {
+  async findById(id: bigint): Promise<AccountTypeResponseDto> {
     this.logger.debug(
       {
         accountTypeId: id.toString(),
@@ -113,12 +103,11 @@ export class AccountTypesService {
       'Retrieving account type by ID',
     );
 
-    const accountType =
-      await this.prisma.accountType.findUnique({
-        where: {
-          id,
-        },
-      });
+    const accountType = await this.prisma.accountType.findUnique({
+      where: {
+        id,
+      },
+    });
 
     if (!accountType) {
       this.logger.warn(
@@ -140,15 +129,12 @@ export class AccountTypesService {
     error: unknown,
   ): error is Prisma.PrismaClientKnownRequestError {
     return (
-      error instanceof
-        Prisma.PrismaClientKnownRequestError &&
+      error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === 'P2002'
     );
   }
 
-  private toResponse(
-    accountType: AccountTypeRecord,
-  ): AccountTypeResponseDto {
+  private toResponse(accountType: AccountTypeRecord): AccountTypeResponseDto {
     return {
       id: accountType.id.toString(),
       name: accountType.name,

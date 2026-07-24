@@ -1,7 +1,14 @@
+packages:
+  - '.'
+
+nodeLinker: isolated
+enableModulesDir: true
+virtualStoreOnly: false
+
 allowBuilds:
+  esbuild: true
   '@prisma/engines': true
-  '@scarf/scarf': set this to true or false
-  bcrypt: true
-  esbuild: set this to true or false
   prisma: true
-  unrs-resolver: false
+  bcrypt: true
+  unrs-resolver: true
+  '@scarf/scarf': false
