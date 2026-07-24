@@ -1,0 +1,44 @@
+# Git
+.git/
+.github/
+
+# Dependencies and compiled output
+node_modules/
+dist/
+build/
+coverage/
+
+# Prisma generated client
+# It will be generated inside the Docker build.
+src/generated/
+
+# Tests and documentation
+test/
+docs/
+
+# Local development tools
+.vscode/
+.idea/
+.agents/
+.claude/
+.windsurf/
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+
+# Local Docker files
+docker-compose*.yml
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
