@@ -45,5 +45,65 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --prod=false
 
-      - name: Run CI validation
+      - name: Run quality, unit tests and build
         run: pnpm ci:check
+
+  integration-and-e2e:
+    name: Integration and E2E Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: quality-unit-build
+
+    env:
+      NODE_ENV: test
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/afos_test?schema=public
+
+    services:
+      postgres:
+        image: postgres:18-alpine
+
+        env:
+          POSTGRES_DB: afos_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+
+        ports:
+          - 5432:5432
+
+        options: >-
+          --health-cmd "pg_isready -U postgres -d afos_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --prod=false
+
+      - name: Generate Prisma Client
+        run: pnpm prisma:generate
+
+      - name: Validate Prisma schema
+        run: pnpm prisma:validate
+
+      - name: Apply database migrations
+        run: pnpm db:migrate:deploy
+
+      - name: Run integration tests
+        run: pnpm test:integration
+
+      - name: Run E2E tests
+        run: pnpm test:e2e
